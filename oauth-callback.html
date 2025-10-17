@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -93,56 +93,9 @@
       padding: 20px;
       border-radius: 12px;
     }
-    .language-selector {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-    .lang-btn {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 8px;
-      padding: 8px 12px;
-      color: #60a5fa;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-    .lang-btn:hover {
-      background: rgba(59, 130, 246, 0.25);
-      transform: scale(1.05);
-    }
-    select {
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    select option {
-      background: #0a0e27;
-    }
   </style>
 </head>
 <body>
-  <!-- Sélecteur de langue -->
-  <div class="language-selector">
-    <select id="langSelect" class="lang-btn">
-      <option value="fr">🇫🇷 Français</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="es">🇪🇸 Español</option>
-      <option value="de">🇩🇪 Deutsch</option>
-      <option value="it">🇮🇹 Italiano</option>
-      <option value="pt">🇵🇹 Português</option>
-      <option value="ru">🇷🇺 Русский</option>
-      <option value="ar">🇸🇦 العربية</option>
-      <option value="ja">🇯🇵 日本語</option>
-      <option value="zh">🇨🇳 中文</option>
-    </select>
-  </div>
-
   <div class="container">
     <div id="content">
       <!-- Rempli par JavaScript -->
@@ -150,170 +103,8 @@
   </div>
   
   <script>
-    // ========================================
-    // TRADUCTIONS
-    // ========================================
-    const translations = {
-      fr: {
-        authSuccess: "Authentification réussie!",
-        yourToken: "📋 Votre token Google:",
-        copyBtn: "📋 Copier",
-        copyInfo: "Copiez le token et retournez vers l'extension pour le coller",
-        tokenCopied: "Token copié!",
-        tokenCopiedInfo: "Le token a été copié dans votre presse-papier.<br><br><strong>Retournez à l'onglet de l'extension et collez le token.</strong><br><br>Vous pouvez fermer cet onglet.",
-        error: "❌ Erreur",
-        noParams: "Aucun paramètre reçu de Google.",
-        authError: "Erreur d'authentification:",
-        tokenMissing: "❌ Token manquant",
-        tokenNotReceived: "Le token d'accès n'a pas été reçu."
-      },
-      en: {
-        authSuccess: "Authentication successful!",
-        yourToken: "📋 Your Google token:",
-        copyBtn: "📋 Copy",
-        copyInfo: "Copy the token and return to the extension to paste it",
-        tokenCopied: "Token copied!",
-        tokenCopiedInfo: "The token has been copied to your clipboard.<br><br><strong>Return to the extension tab and paste the token.</strong><br><br>You can close this tab.",
-        error: "❌ Error",
-        noParams: "No parameters received from Google.",
-        authError: "Authentication error:",
-        tokenMissing: "❌ Token missing",
-        tokenNotReceived: "The access token was not received."
-      },
-      es: {
-        authSuccess: "¡Autenticación exitosa!",
-        yourToken: "📋 Tu token de Google:",
-        copyBtn: "📋 Copiar",
-        copyInfo: "Copia el token y regresa a la extensión para pegarlo",
-        tokenCopied: "¡Token copiado!",
-        tokenCopiedInfo: "El token se ha copiado en tu portapapeles.<br><br><strong>Regresa a la pestaña de la extensión y pega el token.</strong><br><br>Puedes cerrar esta pestaña.",
-        error: "❌ Error",
-        noParams: "No se recibieron parámetros de Google.",
-        authError: "Error de autenticación:",
-        tokenMissing: "❌ Token faltante",
-        tokenNotReceived: "No se recibió el token de acceso."
-      },
-      de: {
-        authSuccess: "Authentifizierung erfolgreich!",
-        yourToken: "📋 Ihr Google-Token:",
-        copyBtn: "📋 Kopieren",
-        copyInfo: "Kopieren Sie das Token und kehren Sie zur Erweiterung zurück, um es einzufügen",
-        tokenCopied: "Token kopiert!",
-        tokenCopiedInfo: "Das Token wurde in Ihre Zwischenablage kopiert.<br><br><strong>Kehren Sie zum Erweiterungs-Tab zurück und fügen Sie das Token ein.</strong><br><br>Sie können diesen Tab schließen.",
-        error: "❌ Fehler",
-        noParams: "Keine Parameter von Google erhalten.",
-        authError: "Authentifizierungsfehler:",
-        tokenMissing: "❌ Token fehlt",
-        tokenNotReceived: "Das Zugriffstoken wurde nicht empfangen."
-      },
-      it: {
-        authSuccess: "Autenticazione riuscita!",
-        yourToken: "📋 Il tuo token Google:",
-        copyBtn: "📋 Copia",
-        copyInfo: "Copia il token e torna all'estensione per incollarlo",
-        tokenCopied: "Token copiato!",
-        tokenCopiedInfo: "Il token è stato copiato negli appunti.<br><br><strong>Torna alla scheda dell'estensione e incolla il token.</strong><br><br>Puoi chiudere questa scheda.",
-        error: "❌ Errore",
-        noParams: "Nessun parametro ricevuto da Google.",
-        authError: "Errore di autenticazione:",
-        tokenMissing: "❌ Token mancante",
-        tokenNotReceived: "Il token di accesso non è stato ricevuto."
-      },
-      ja: {
-        authSuccess: "認証成功！",
-        yourToken: "📋 あなたのGoogleトークン:",
-        copyBtn: "📋 コピー",
-        copyInfo: "トークンをコピーして拡張機能に戻って貼り付けてください",
-        tokenCopied: "トークンがコピーされました！",
-        tokenCopiedInfo: "トークンがクリップボードにコピーされました。<br><br><strong>拡張機能のタブに戻ってトークンを貼り付けてください。</strong><br><br>このタブを閉じることができます。",
-        error: "❌ エラー",
-        noParams: "Googleからパラメータを受信していません。",
-        authError: "認証エラー:",
-        tokenMissing: "❌ トークンがありません",
-        tokenNotReceived: "アクセストークンが受信されませんでした。"
-      },
-      pt: {
-        authSuccess: "Autenticação bem-sucedida!",
-        yourToken: "📋 Seu token do Google:",
-        copyBtn: "📋 Copiar",
-        copyInfo: "Copie o token e volte para a extensão para colá-lo",
-        tokenCopied: "Token copiado!",
-        tokenCopiedInfo: "O token foi copiado para sua área de transferência.<br><br><strong>Volte para a aba da extensão e cole o token.</strong><br><br>Você pode fechar esta aba.",
-        error: "❌ Erro",
-        noParams: "Nenhum parâmetro recebido do Google.",
-        authError: "Erro de autenticação:",
-        tokenMissing: "❌ Token ausente",
-        tokenNotReceived: "O token de acesso não foi recebido."
-      },
-      zh: {
-        authSuccess: "认证成功！",
-        yourToken: "📋 您的Google令牌:",
-        copyBtn: "📋 复制",
-        copyInfo: "复制令牌并返回扩展程序进行粘贴",
-        tokenCopied: "令牌已复制！",
-        tokenCopiedInfo: "令牌已复制到您的剪贴板。<br><br><strong>返回扩展程序选项卡并粘贴令牌。</strong><br><br>您可以关闭此选项卡。",
-        error: "❌ 错误",
-        noParams: "未从Google收到参数。",
-        authError: "认证错误:",
-        tokenMissing: "❌ 令牌缺失",
-        tokenNotReceived: "未收到访问令牌。"
-      },
-      ru: {
-        authSuccess: "Аутентификация успешна!",
-        yourToken: "📋 Ваш токен Google:",
-        copyBtn: "📋 Копировать",
-        copyInfo: "Скопируйте токен и вернитесь к расширению, чтобы вставить его",
-        tokenCopied: "Токен скопирован!",
-        tokenCopiedInfo: "Токен скопирован в буфер обмена.<br><br><strong>Вернитесь на вкладку расширения и вставьте токен.</strong><br><br>Вы можете закрыть эту вкладку.",
-        error: "❌ Ошибка",
-        noParams: "Параметры не получены от Google.",
-        authError: "Ошибка аутентификации:",
-        tokenMissing: "❌ Токен отсутствует",
-        tokenNotReceived: "Токен доступа не получен."
-      },
-      ar: {
-        authSuccess: "نجحت المصادقة!",
-        yourToken: "📋 الرمز الخاص بك من Google:",
-        copyBtn: "📋 نسخ",
-        copyInfo: "انسخ الرمز وارجع إلى الإضافة للصقه",
-        tokenCopied: "تم نسخ الرمز!",
-        tokenCopiedInfo: "تم نسخ الرمز إلى الحافظة.<br><br><strong>ارجع إلى علامة تبويب الإضافة والصق الرمز.</strong><br><br>يمكنك إغلاق علامة التبويب هذه.",
-        error: "❌ خطأ",
-        noParams: "لم يتم استلام معاملات من Google.",
-        authError: "خطأ في المصادقة:",
-        tokenMissing: "❌ الرمز مفقود",
-        tokenNotReceived: "لم يتم استلام رمز الوصول."
-      }
-    };
-
-    // ========================================
-    // DÉTECTION ET CHANGEMENT DE LANGUE
-    // ========================================
-    
-    function getBrowserLanguage() {
-      const lang = navigator.language || navigator.userLanguage;
-      const langCode = lang.split('-')[0];
-      return translations[langCode] ? langCode : 'en';
-    }
-
-    let currentLang = getBrowserLanguage();
-    
-    // Initialiser le sélecteur de langue
-    document.getElementById('langSelect').value = currentLang;
-    
-    // Écouter les changements de langue
-    document.getElementById('langSelect').addEventListener('change', function(e) {
-      currentLang = e.target.value;
-      processOAuthCallback(); // Recharger le contenu traduit
-    });
-
-    // ========================================
-    // TRAITEMENT OAUTH
-    // ========================================
-    
-    function processOAuthCallback() {
+    (function() {
       const contentEl = document.getElementById('content');
-      const t = translations[currentLang];
       
       try {
         const hash = window.location.hash.substring(1);
@@ -321,8 +112,8 @@
         if (!hash) {
           contentEl.innerHTML = `
             <div class="error">
-              <h1>${t.error}</h1>
-              <p>${t.noParams}</p>
+              <h1>Erreur</h1>
+              <p>Aucun paramètre reçu de Google.</p>
             </div>
           `;
           return;
@@ -335,8 +126,8 @@
         if (error) {
           contentEl.innerHTML = `
             <div class="error">
-              <h1>${t.error}</h1>
-              <p>${t.authError} ${error}</p>
+              <h1>Erreur</h1>
+              <p>Erreur d'authentification : ${error}</p>
             </div>
           `;
           return;
@@ -345,8 +136,8 @@
         if (!accessToken) {
           contentEl.innerHTML = `
             <div class="error">
-              <h1>${t.tokenMissing}</h1>
-              <p>${t.tokenNotReceived}</p>
+              <h1>Token manquant</h1>
+              <p>Le token d'accès n'a pas été reçu.</p>
             </div>
           `;
           return;
@@ -354,33 +145,31 @@
         
         // Afficher le token
         contentEl.innerHTML = `
-          <div class="success">✅</div>
-          <h1>${t.authSuccess}</h1>
+          <h1>Authentification réussie</h1>
           
           <div class="instruction">
-            <div class="step">${t.yourToken}</div>
+            <div class="step">Votre token Google :</div>
             <div class="token-box" id="tokenBox">${accessToken}</div>
-            <button class="copy-btn" id="copyBtn">${t.copyBtn}</button>
+            <button class="copy-btn" id="copyBtn">Copier le token</button>
           </div>
           
-          <div class="detail" style="color: #94a3b8; font-size: 14px; margin-top: 20px;">
-            ${t.copyInfo}
+          <div class="detail">
+            Copiez ce token et retournez sur anime-sama.fr/profil/ pour le coller.
           </div>
         `;
         
-        // Bouton copier + redirection
+        // Bouton copier
         document.getElementById('copyBtn').addEventListener('click', function() {
-          // Copier dans le presse-papier
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(accessToken).then(function() {
-              redirectToExtension();
+              showSuccess();
             }).catch(function() {
               fallbackCopy();
-              redirectToExtension();
+              showSuccess();
             });
           } else {
             fallbackCopy();
-            redirectToExtension();
+            showSuccess();
           }
           
           function fallbackCopy() {
@@ -400,40 +189,18 @@
             document.body.removeChild(textArea);
           }
           
-          function redirectToExtension() {
-            try {
-              localStorage.setItem('temp_google_token', accessToken);
-              localStorage.setItem('temp_token_time', Date.now());
-            } catch (e) {
-              console.log('LocalStorage not available');
-            }
-            
-            // Mapping des drapeaux pour la langue
-            const langFlags = {
-              fr: '🇫🇷 Français',
-              en: '🇬🇧 English',
-              es: '🇪🇸 Español',
-              de: '🇩🇪 Deutsch',
-              it: '🇮🇹 Italiano',
-              pt: '🇵🇹 Português',
-              ru: '🇷🇺 Русский',
-              ar: '🇸🇦 العربية',
-              ja: '🇯🇵 日本語',
-              zh: '🇨🇳 中文'
-            };
-            
+          function showSuccess() {
             document.body.innerHTML = `
-              <div class="language-selector">
-                <select id="langSelect" class="lang-btn" disabled>
-                  <option>${langFlags[currentLang] || '🇬🇧 English'}</option>
-                </select>
-              </div>
               <div class="container">
-                <div class="success">✅</div>
-                <h1 style="color: #10b981;">${t.tokenCopied}</h1>
+                <div class="success">✓</div>
+                <h1 style="color: #10b981;">Token copié</h1>
                 <div class="instruction">
                   <div class="detail">
-                    ${t.tokenCopiedInfo}
+                    Le token a été copié dans votre presse-papier.
+                    <br><br>
+                    <strong>Retournez sur anime-sama.fr/profil/ et collez le token.</strong>
+                    <br><br>
+                    Vous pouvez fermer cet onglet.
                   </div>
                 </div>
               </div>
@@ -448,15 +215,12 @@
       } catch (e) {
         contentEl.innerHTML = `
           <div class="error">
-            <h1>${t.error}</h1>
+            <h1>Erreur</h1>
             <p>${e.message}</p>
           </div>
         `;
       }
-    }
-    
-    // Lancer le traitement au chargement
-    processOAuthCallback();
+    })();
   </script>
 </body>
 </html>
