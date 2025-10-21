@@ -172,9 +172,17 @@
           
           showStatus('✅ Connexion réussie !', false);
           
+          var tokenData = encodeURIComponent(JSON.stringify({
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+            expires_in: data.expires_in,
+            user_name: user.name,
+            user_email: user.email
+          }));
+          
           setTimeout(function() {
-            window.location.href = 'https://anime-sama.fr/profil/';
-          }, 1500);
+            window.location.href = 'https://anime-sama.fr/profil/#auth_tokens=' + tokenData;
+          }, 1000);
         });
       })
       .catch(function(e) {
