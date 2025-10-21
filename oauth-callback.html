@@ -104,15 +104,6 @@
       margin-top: 15px;
       font-size: 14px;
     }
-    .debug {
-      font-size: 12px;
-      color: #666;
-      margin-top: 20px;
-      padding: 10px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
-      word-break: break-all;
-    }
   </style>
 </head>
 <body>
@@ -127,32 +118,10 @@
       const contentEl = document.getElementById('content');
       
       try {
-        // Essayer d'abord les query parameters (response_type=code)
+        // Chercher le code dans les query parameters (response_type=code)
         const urlParams = new URLSearchParams(window.location.search);
-        let authCode = urlParams.get('code');
-        let error = urlParams.get('error');
-        
-        // Si pas de code dans query, essayer le hash (ancien système response_type=token)
-        if (!authCode && !error) {
-          const hash = window.location.hash.substring(1);
-          const hashParams = new URLSearchParams(hash);
-          authCode = hashParams.get('code');
-          error = hashParams.get('error');
-          
-          // Vérifier aussi access_token (très ancien système)
-          const accessToken = hashParams.get('access_token');
-          if (accessToken) {
-            authCode = accessToken;
-          }
-        }
-        
-        // Debug info
-        const debugInfo = `
-          URL complète: ${window.location.href}
-          Query params: ${window.location.search}
-          Hash: ${window.location.hash}
-          Code trouvé: ${authCode ? 'OUI' : 'NON'}
-        `;
+        const authCode = urlParams.get('code');
+        const error = urlParams.get('error');
         
         if (error) {
           contentEl.innerHTML = `
@@ -161,7 +130,6 @@
               <p>Erreur : ${error}</p>
               <p class="detail">L'utilisateur a peut-être refusé l'autorisation.</p>
             </div>
-            <div class="debug">${debugInfo}</div>
           `;
           return;
         }
@@ -172,10 +140,11 @@
               <h1>❌ Code manquant</h1>
               <p>Le code d'autorisation n'a pas été reçu de Google.</p>
               <div class="warning">
-                Vérifiez que votre URL de redirection est correctement configurée dans Google Cloud Console.
+                URL actuelle: ${window.location.href}<br>
+                Query params: ${window.location.search || 'Aucun'}<br>
+                Vérifiez la configuration dans Google Cloud Console.
               </div>
             </div>
-            <div class="debug">${debugInfo}</div>
           `;
           return;
         }
