@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Token Google - Anime Sama Sync</title>
+  <title>Code Google OAuth - Anime Sama Sync</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -61,6 +61,8 @@
       font-family: 'Courier New', monospace;
       font-size: 14px;
       color: #34d399;
+      max-height: 200px;
+      overflow-y: auto;
     }
     .copy-btn {
       display: inline-block;
@@ -93,6 +95,15 @@
       padding: 20px;
       border-radius: 12px;
     }
+    .warning {
+      background: rgba(251, 191, 36, 0.2);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      color: #fbbf24;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -107,61 +118,60 @@
       const contentEl = document.getElementById('content');
       
       try {
-        const hash = window.location.hash.substring(1);
-        
-        if (!hash) {
-          contentEl.innerHTML = `
-            <div class="error">
-              <h1>Erreur</h1>
-              <p>Aucun paramètre reçu de Google.</p>
-            </div>
-          `;
-          return;
-        }
-        
-        const params = new URLSearchParams(hash);
-        const accessToken = params.get('access_token');
-        const error = params.get('error');
+        // OAuth 2.0 avec response_type=code renvoie le code dans les query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get('code');
+        const error = urlParams.get('error');
         
         if (error) {
           contentEl.innerHTML = `
             <div class="error">
-              <h1>Erreur</h1>
-              <p>Erreur d'authentification : ${error}</p>
+              <h1>❌ Erreur d'authentification</h1>
+              <p>Erreur : ${error}</p>
+              <p class="detail">L'utilisateur a peut-être refusé l'autorisation.</p>
             </div>
           `;
           return;
         }
         
-        if (!accessToken) {
+        if (!authCode) {
           contentEl.innerHTML = `
             <div class="error">
-              <h1>Token manquant</h1>
-              <p>Le token d'accès n'a pas été reçu.</p>
+              <h1>❌ Code manquant</h1>
+              <p>Le code d'autorisation n'a pas été reçu de Google.</p>
+              <div class="warning">
+                Vérifiez que votre URL de redirection est correctement configurée dans Google Cloud Console.
+              </div>
             </div>
           `;
           return;
         }
         
-        // Afficher le token
+        // Afficher le code d'autorisation
         contentEl.innerHTML = `
-          <h1>Authentification réussie</h1>
+          <div class="success">✓</div>
+          <h1>Authentification réussie !</h1>
           
           <div class="instruction">
-            <div class="step">Votre token Google :</div>
-            <div class="token-box" id="tokenBox">${accessToken}</div>
-            <button class="copy-btn" id="copyBtn">Copier le token</button>
+            <div class="step">📋 Étape 2 : Copiez ce code</div>
+            <div class="token-box" id="codeBox">${authCode}</div>
+            <button class="copy-btn" id="copyBtn">📋 Copier le code</button>
           </div>
           
           <div class="detail">
-            Copiez ce token et retournez sur anime-sama.fr/profil/ pour le coller.
+            <strong>Important :</strong> Retournez sur <strong>anime-sama.fr/profil/</strong><br>
+            et collez ce code dans le champ prévu.
+          </div>
+          
+          <div class="warning">
+            ⚠️ Ce code expire dans quelques minutes. Utilisez-le rapidement !
           </div>
         `;
         
         // Bouton copier
         document.getElementById('copyBtn').addEventListener('click', function() {
           if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(accessToken).then(function() {
+            navigator.clipboard.writeText(authCode).then(function() {
               showSuccess();
             }).catch(function() {
               fallbackCopy();
@@ -174,7 +184,7 @@
           
           function fallbackCopy() {
             const textArea = document.createElement('textarea');
-            textArea.value = accessToken;
+            textArea.value = authCode;
             textArea.style.position = 'fixed';
             textArea.style.left = '-9999px';
             document.body.appendChild(textArea);
@@ -192,13 +202,15 @@
           function showSuccess() {
             document.body.innerHTML = `
               <div class="container">
-                <div class="success">✓</div>
-                <h1 style="color: #10b981;">Token copié</h1>
+                <div class="success">✅</div>
+                <h1 style="color: #10b981;">Code copié !</h1>
                 <div class="instruction">
                   <div class="detail">
-                    Le token a été copié dans votre presse-papier.
+                    Le code d'autorisation a été copié dans votre presse-papier.
                     <br><br>
-                    <strong>Retournez sur anime-sama.fr/profil/ et collez le token.</strong>
+                    <strong>🔄 Retournez sur anime-sama.fr/profil/</strong><br>
+                    <strong>📝 Collez le code dans le champ</strong><br>
+                    <strong>✓ Validez pour terminer l'authentification</strong>
                     <br><br>
                     Vous pouvez fermer cet onglet.
                   </div>
@@ -206,16 +218,17 @@
               </div>
             `;
             
-            setTimeout(function() {
-              window.close();
-            }, 2000);
+            // Ne pas fermer automatiquement pour laisser le temps à l'utilisateur
+            // setTimeout(function() {
+            //   window.close();
+            // }, 3000);
           }
         });
         
       } catch (e) {
         contentEl.innerHTML = `
           <div class="error">
-            <h1>Erreur</h1>
+            <h1>❌ Erreur technique</h1>
             <p>${e.message}</p>
           </div>
         `;
