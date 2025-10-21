@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion Mobile - Anime Sama</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    h1 { 
+      color: #60a5fa; 
+      text-align: center; 
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+    .step {
+      background: rgba(255,255,255,0.03);
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    .step h2 {
+      color: #60a5fa;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+    .btn:active { transform: scale(0.98); }
+    input {
+      width: 100%;
+      padding: 14px;
+      background: rgba(15,23,42,0.9);
+      color: white;
+      border: 2px solid rgba(96,165,250,0.3);
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    button:disabled {
+      opacity: 0.5;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+    .success { 
+      background: rgba(16,185,129,0.2); 
+      color: #10b981;
+      border: 1px solid rgba(16,185,129,0.4);
+    }
+    .error { 
+      background: rgba(239,68,68,0.2); 
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,0.4);
+    }
+    .info {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Connexion Mobile</h1>
+    
+    <div class="step">
+      <h2>Étape 1 : Se connecter</h2>
+      <a href="https://accounts.google.com/o/oauth2/auth?client_id=836968942807-dr7vm8ajpb7a76oo80g0vitgo9gbq2ps.apps.googleusercontent.com&response_type=code&access_type=offline&prompt=consent&redirect_uri=https://foumalade.github.io/anime-sama-history-sync/oauth-callback.html&scope=https://www.googleapis.com/auth/drive.file%20https://www.googleapis.com/auth/drive.appdata%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email" class="btn">
+        Se connecter avec Google
+      </a>
+      <p class="info">Une nouvelle page va s'ouvrir pour autoriser l'accès</p>
+    </div>
+    
+    <div class="step">
+      <h2>Étape 2 : Coller le code</h2>
+      <input type="text" id="codeInput" placeholder="Collez le code d'autorisation ici">
+      <button id="validateBtn">Valider</button>
+      <div id="status" class="status"></div>
+      <p class="info">Après autorisation, copiez le code et collez-le ici</p>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    var BACKEND = 'https://oauth-backend.foumalade.workers.dev';
+    var btn = document.getElementById('validateBtn');
+    var input = document.getElementById('codeInput');
+    var status = document.getElementById('status');
+
+    function showStatus(msg, isError) {
+      status.textContent = msg;
+      status.className = 'status ' + (isError ? 'error' : 'success');
+      status.style.display = 'block';
+    }
+
+    btn.addEventListener('click', function() {
+      var code = input.value.trim();
+      
+      if (!code || code.length < 10) {
+        showStatus('⚠️ Code invalide', true);
+        return;
+      }
+
+      btn.disabled = true;
+      showStatus('🔄 Connexion en cours...', false);
+
+      fetch(BACKEND + '/api/auth/token-mobile', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({code: code})
+      })
+      .then(function(r) {
+        if (!r.ok) throw new Error('Erreur ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        if (!data.access_token || !data.refresh_token) {
+          throw new Error('Tokens manquants');
+        }
+        
+        return fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+          headers: {'Authorization': 'Bearer ' + data.access_token}
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(user) {
+          localStorage.setItem('animesama_access_token', data.access_token);
+          localStorage.setItem('animesama_refresh_token', data.refresh_token);
+          localStorage.setItem('animesama_token_expires_at', Date.now() + (data.expires_in * 1000));
+          localStorage.setItem('animesama_user_name', user.name || 'Utilisateur');
+          localStorage.setItem('animesama_user_email', user.email || '');
+          
+          showStatus('✅ Connexion réussie !', false);
+          
+          setTimeout(function() {
+            window.location.href = 'https://anime-sama.fr/profil/';
+          }, 1500);
+        });
+      })
+      .catch(function(e) {
+        showStatus('❌ ' + e.message, true);
+        btn.disabled = false;
+      });
+    });
+  })();
+  </script>
+</body>
+</html>
