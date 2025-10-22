@@ -126,7 +126,7 @@
         if (error) {
           contentEl.innerHTML = `
             <div class="error">
-              <h1>❌ Erreur d'authentification</h1>
+              <h1>Erreur d'authentification</h1>
               <p>Erreur : ${error}</p>
               <p class="detail">L'utilisateur a peut-être refusé l'autorisation.</p>
             </div>
@@ -137,7 +137,7 @@
         if (!authCode) {
           contentEl.innerHTML = `
             <div class="error">
-              <h1>❌ Code manquant</h1>
+              <h1>Code manquant</h1>
               <p>Le code d'autorisation n'a pas été reçu de Google.</p>
               <div class="warning">
                 URL actuelle: ${window.location.href}<br>
@@ -160,7 +160,7 @@
           </div>
           
           <div class="warning">
-            ⚠️ Ce code expire dans quelques minutes. Utilisez-le rapidement !
+            Ce code expire dans quelques minutes. Utilisez-le rapidement !
           </div>
         `;
         
@@ -204,7 +204,7 @@
       } catch (e) {
         contentEl.innerHTML = `
           <div class="error">
-            <h1>❌ Erreur technique</h1>
+            <h1>Erreur technique</h1>
             <p>${e.message}</p>
           </div>
         `;
