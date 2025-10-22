@@ -207,12 +207,12 @@
       var code = input.value.trim();
       
       if (!code || code.length < 10) {
-        showStatus('⚠️ Code invalide', true);
+        showStatus('Code invalide', true);
         return;
       }
 
       btn.disabled = true;
-      showStatus('🔄 Connexion en cours...', false);
+      showStatus('Connexion en cours...', false);
 
       fetch(BACKEND + '/api/auth/token-mobile', {
         method: 'POST',
@@ -243,7 +243,7 @@
           localStorage.setItem('animesama_user_email', user.email || '');
           localStorage.setItem('animesama_user_picture', user.picture || '');
           
-          showStatus('✅ Connexion réussie ! Redirection...', false);
+          showStatus('Connexion réussie ! Redirection...', false);
           
           var tokenData = encodeURIComponent(JSON.stringify({
             access_token: data.access_token,
@@ -260,7 +260,7 @@
         });
       })
       .catch(function(e) {
-        showStatus('❌ ' + e.message, true);
+        showStatus(e.message, true);
         btn.disabled = false;
       });
     });
