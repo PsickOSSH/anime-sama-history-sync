@@ -177,6 +177,7 @@
           localStorage.setItem('animesama_token_expires_at', Date.now() + (data.expires_in * 1000));
           localStorage.setItem('animesama_user_name', user.name || 'Utilisateur');
           localStorage.setItem('animesama_user_email', user.email || '');
+          localStorage.setItem('animesama_user_picture', user.picture || '');
           
           showStatus('✅ Connexion réussie !', false);
           
@@ -185,7 +186,8 @@
             refresh_token: data.refresh_token,
             expires_in: data.expires_in,
             user_name: user.name,
-            user_email: user.email
+            user_email: user.email,
+            user_picture: user.picture
           }));
           
           setTimeout(function() {
