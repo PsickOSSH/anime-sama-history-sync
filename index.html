@@ -126,6 +126,16 @@
     var input = document.getElementById('codeInput');
     var status = document.getElementById('status');
 
+    // Auto-remplir le champ si le code est dans l'URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var codeFromUrl = urlParams.get('code');
+    
+    if (codeFromUrl) {
+      input.value = codeFromUrl;
+      // Optionnel : déclencher automatiquement la validation
+      // setTimeout(function() { btn.click(); }, 500);
+    }
+
     function showStatus(msg, isError) {
       status.textContent = msg;
       status.className = 'status ' + (isError ? 'error' : 'success');
