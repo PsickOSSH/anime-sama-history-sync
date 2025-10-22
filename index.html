@@ -98,6 +98,39 @@
       margin-top: 10px;
       line-height: 1.5;
     }
+    /* NOUVEAU : Styles pour l'image de profil */
+    .user-preview {
+      display: none;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .user-preview.show {
+      display: flex;
+    }
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #10b981;
+    }
+    .user-details {
+      flex: 1;
+    }
+    .user-name {
+      font-weight: 600;
+      color: #10b981;
+      margin-bottom: 3px;
+    }
+    .user-email {
+      font-size: 13px;
+      color: #94a3b8;
+    }
   </style>
 </head>
 <body>
@@ -113,6 +146,16 @@
     
     <div class="step">
       <h2>Étape 2 : Coller le code</h2>
+      
+      <!-- NOUVEAU : Aperçu du profil utilisateur -->
+      <div id="userPreview" class="user-preview">
+        <img id="userAvatar" class="user-avatar" src="" alt="Avatar">
+        <div class="user-details">
+          <div id="userName" class="user-name"></div>
+          <div id="userEmail" class="user-email"></div>
+        </div>
+      </div>
+      
       <input type="text" id="codeInput" placeholder="Collez le code d'autorisation ici">
       <button id="validateBtn">Valider</button>
       <div id="status" class="status"></div>
@@ -125,6 +168,12 @@
     var btn = document.getElementById('validateBtn');
     var input = document.getElementById('codeInput');
     var status = document.getElementById('status');
+    
+    // NOUVEAU : Éléments pour l'aperçu utilisateur
+    var userPreview = document.getElementById('userPreview');
+    var userAvatar = document.getElementById('userAvatar');
+    var userName = document.getElementById('userName');
+    var userEmail = document.getElementById('userEmail');
 
     // Auto-remplir le champ si le code est dans l'URL
     var urlParams = new URLSearchParams(window.location.search);
@@ -140,6 +189,18 @@
       status.textContent = msg;
       status.className = 'status ' + (isError ? 'error' : 'success');
       status.style.display = 'block';
+    }
+    
+    // NOUVEAU : Fonction pour afficher l'aperçu utilisateur
+    function showUserPreview(user) {
+      if (user.picture) {
+        userAvatar.src = user.picture;
+      } else {
+        userAvatar.style.display = 'none';
+      }
+      userName.textContent = user.name || 'Utilisateur';
+      userEmail.textContent = user.email || '';
+      userPreview.classList.add('show');
     }
 
     btn.addEventListener('click', function() {
@@ -172,6 +233,9 @@
         })
         .then(function(r) { return r.json(); })
         .then(function(user) {
+          // NOUVEAU : Afficher l'aperçu utilisateur
+          showUserPreview(user);
+          
           localStorage.setItem('animesama_access_token', data.access_token);
           localStorage.setItem('animesama_refresh_token', data.refresh_token);
           localStorage.setItem('animesama_token_expires_at', Date.now() + (data.expires_in * 1000));
@@ -179,7 +243,7 @@
           localStorage.setItem('animesama_user_email', user.email || '');
           localStorage.setItem('animesama_user_picture', user.picture || '');
           
-          showStatus('✅ Connexion réussie !', false);
+          showStatus('✅ Connexion réussie ! Redirection...', false);
           
           var tokenData = encodeURIComponent(JSON.stringify({
             access_token: data.access_token,
@@ -192,7 +256,7 @@
           
           setTimeout(function() {
             window.location.href = 'https://anime-sama.fr/profil/#auth_tokens=' + tokenData;
-          }, 1000);
+          }, 1500);
         });
       })
       .catch(function(e) {
