@@ -156,7 +156,7 @@
           <div class="instruction">
             <div class="step">Étape 2 : Copiez ce code</div>
             <div class="token-box" id="codeBox">${authCode}</div>
-            <button class="copy-btn" id="copyBtn">Copier le code</button>
+            <button class="copy-btn" id="copyBtn">Copier le code et continuer</button>
           </div>
           
           <div class="warning">
@@ -164,18 +164,18 @@
           </div>
         `;
         
-        // Bouton copier
+        // Bouton copier et redirection
         document.getElementById('copyBtn').addEventListener('click', function() {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(authCode).then(function() {
-              showSuccess();
+              redirectToIndex();
             }).catch(function() {
               fallbackCopy();
-              showSuccess();
+              redirectToIndex();
             });
           } else {
             fallbackCopy();
-            showSuccess();
+            redirectToIndex();
           }
           
           function fallbackCopy() {
@@ -195,24 +195,9 @@
             document.body.removeChild(textArea);
           }
           
-          function showSuccess() {
-            document.body.innerHTML = `
-              <div class="container">
-                <div class="success">✅</div>
-                <h1 style="color: #10b981;">Code copié !</h1>
-                <div class="instruction">
-                  <div class="detail">
-                    Le code d'autorisation a été copié dans votre presse-papier.
-                    <br><br>
-                    <strong>🔄 Retournez sur anime-sama.fr/profil/</strong><br>
-                    <strong>📝 Collez le code dans le champ</strong><br>
-                    <strong>✓ Validez pour terminer l'authentification</strong>
-                    <br><br>
-                    Vous pouvez fermer cet onglet.
-                  </div>
-                </div>
-              </div>
-            `;
+          function redirectToIndex() {
+            // Redirection vers index.html avec le code en paramètre
+            window.location.href = 'index.html?code=' + encodeURIComponent(authCode);
           }
         });
         
