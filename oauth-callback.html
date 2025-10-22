@@ -151,18 +151,12 @@
         
         // Afficher le code d'autorisation
         contentEl.innerHTML = `
-          <div class="success">✓</div>
           <h1>Authentification réussie !</h1>
           
           <div class="instruction">
-            <div class="step">📋 Étape 2 : Copiez ce code</div>
+            <div class="step">Étape 2 : Copiez ce code</div>
             <div class="token-box" id="codeBox">${authCode}</div>
-            <button class="copy-btn" id="copyBtn">📋 Copier le code</button>
-          </div>
-          
-          <div class="detail">
-            <strong>Important :</strong> Retournez sur <strong>anime-sama.fr/profil/</strong><br>
-            et collez ce code dans le champ prévu.
+            <button class="copy-btn" id="copyBtn">Copier le code</button>
           </div>
           
           <div class="warning">
