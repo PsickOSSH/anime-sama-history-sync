@@ -5,36 +5,172 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Politique de confidentialité - Anime Sama - History Sync</title>
   <style>
+    * {
+      color-scheme: dark;
+    }
     body {
-      font-family: Arial, sans-serif;
-      max-width: 500px;
-      margin: 50px auto;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
       padding: 20px;
       line-height: 1.6;
+      color: #e0e0e0;
+      background: #1a1a1a;
     }
-    h1 { color: #1a73e8; }
-    h2 { color: #333; margin-top: 30px; }
+    .container {
+      background: #242424;
+      padding: 30px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+    h1 { 
+      color: #5eb3f6; 
+      border-bottom: 2px solid #5eb3f6; 
+      padding-bottom: 8px; 
+    }
+    h2 { 
+      color: #5eb3f6; 
+      margin-top: 25px; 
+      font-size: 18px; 
+    }
+    .warning { 
+      background: #3d2e1f; 
+      border-left: 3px solid #ffa500; 
+      padding: 12px; 
+      margin: 15px 0; 
+      color: #ffc966;
+    }
+    code { 
+      background: #2a2a2a; 
+      padding: 2px 5px; 
+      border-radius: 3px; 
+      color: #a0d8ff;
+    }
+    a { 
+      color: #5eb3f6; 
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin: 15px 0; 
+    }
+    table th { 
+      background: #2a2a2a; 
+      padding: 8px; 
+      text-align: left; 
+      font-weight: 600; 
+      color: #5eb3f6;
+      border-bottom: 1px solid #3a3a3a;
+    }
+    table td { 
+      padding: 8px; 
+      border-bottom: 1px solid #3a3a3a; 
+      color: #c0c0c0;
+    }
+    ul { 
+      margin-left: 20px; 
+    }
+    li { 
+      margin-bottom: 6px; 
+    }
   </style>
 </head>
 <body>
-  <h1>Politique de confidentialité</h1>
-  <h2>Anime Sama - History Sync</h2>
-  <p><strong>Dernière mise à jour :</strong> 02 novembre 2025</p>
-  
-  <h2>Données collectées</h2>
-  <ul>
-    <li>Nom, adresse e-mail et image de profil Google</li>
-    <li>Historique de visionnage sur anime-sama.org</li>
-  </ul>
-  
-  <h2>Utilisation des données</h2>
-  <p>Les données sont utilisées uniquement pour synchroniser votre historique entre vos appareils via votre Google Drive personnel.</p>
-  
-  <h2>Stockage des données</h2>
-  <p>Toutes les données sont stockées sur votre Google Drive personnel. Nous ne stockons aucune donnée sur nos serveurs.</p>
-  
-  <h2>Partage des données</h2>
-  <p>Aucune donnée n'est vendue, partagée ou transférée à des tiers.</p>
+  <div class="container">
+    <h1>Politique de confidentialité</h1>
+    <p><strong>Anime Sama - History Sync</strong> | Mise à jour : 03 novembre 2025</p>
+
+    <h2>1. Données collectées</h2>
+    <ul>
+      <li><strong>Identité Google :</strong> Nom, email, photo de profil (via OAuth)</li>
+      <li><strong>Historique anime :</strong> Données depuis localStorage anime-sama.org (visionnage, favoris, watchlist)</li>
+      <li><strong>Tokens :</strong> Refresh token et access token pour accéder à Google Drive</li>
+    </ul>
+    <p>
+      <strong>Important :</strong> L'extension n'accède <strong>jamais</strong> aux données du serveur anime-sama.org. 
+      Elle synchronise seulement les données stockées localement dans votre navigateur.
+    </p>
+
+    <h2>2. Où vos données sont stockées</h2>
+    <table>
+      <tr>
+        <th>Stockage</th>
+        <th>Contenu</th>
+        <th>Chiffrage</th>
+      </tr>
+      <tr>
+        <td><strong>Google Drive</strong></td>
+        <td>Historique anime (fichier <code>anime-sama-history.json</code>)</td>
+        <td>AES-256 (chiffrement Google)</td>
+      </tr>
+      <tr>
+        <td><strong>Navigateur local</strong></td>
+        <td>Refresh token, access token, métadonnées</td>
+        <td>Stockage local non chiffré</td>
+      </tr>
+      <tr>
+        <td><strong>Cloudflare</strong></td>
+        <td>Logs techniques (IP, métadonnées renouvellement)</td>
+        <td>Conservés 7-30 jours</td>
+      </tr>
+    </table>
+
+    <div class="warning">
+      <strong>Risque de sécurité critique :</strong> Le refresh token est stocké en plaintext dans <code>chrome.storage.local</code>. 
+      Un attaquant avec accès local (malware, utilisateur partagé avec permissions admin) peut le voler et accéder indéfiniment à votre Google Drive. 
+      <strong>Ne partagez pas votre ordinateur avec d'autres utilisateurs.</strong>
+    </div>
+
+    <h2>3. Synchronisation multi-appareils</h2>
+    <p>
+      Votre historique est accessible sur tous les appareils où vous connectez le même compte Google. 
+      Tout nouvel appareil utilisant votre compte Google peut charger votre historique anime complet. 
+      Ne partagez pas votre compte Google si vous souhaitez garder vos données privées.
+    </p>
+
+    <h2>4. Qui accède à vos données</h2>
+    <ul>
+      <li><strong>Vous seul :</strong> Via votre compte Google ou directement sur Google Drive</li>
+      <li><strong>Cloudflare :</strong> Voit les métadonnées de renouvellement de tokens (USA, encadré par clauses contractuelles types RGPD)</li>
+      <li><strong>Google :</strong> Stocke vos données, chiffrées</li>
+    </ul>
+
+    <h2>5. Vos droits (RGPD)</h2>
+    <ul>
+      <li><strong>Accès :</strong> Lisez directement <code>anime-sama-history.json</code> sur Google Drive</li>
+      <li><strong>Suppression :</strong> Supprimez le fichier Drive + déconnectez l'extension</li>
+      <li><strong>Portabilité :</strong> Téléchargez le JSON depuis Drive</li>
+      <li><strong>Retrait du consentement :</strong> Cliquez "Se déconnecter" dans l'extension</li>
+    </ul>
+
+    <h2>6. Pas de tracking, pas de pub</h2>
+    <ul>
+      <li>Aucun cookie</li>
+      <li>Aucun pixel de suivi</li>
+      <li>Aucun analytics</li>
+      <li>Vos données ne sont jamais vendues</li>
+    </ul>
+
+    <h2>7. Sécurité</h2>
+    <ul>
+      <li>OAuth 2.0 (secrets gérés par Cloudflare, jamais exposés)</li>
+      <li>HTTPS/TLS 1.2+ pour toutes les communications</li>
+      <li>Refresh token valide indéfiniment jusqu'à votre déconnexion ou révocation via votre compte Google</li>
+      <li>Access token renouvelé automatiquement chaque heure</li>
+      <li><strong>Révocation :</strong> Si compromis, révoquez manuellement l'accès via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Account</a></li>
+    </ul>
+
+    <h2>8. Questions</h2>
+    <p>Contactez : <a href="mailto:foumalade.extension@protonmail.com">foumalade.extension@protonmail.com</a></p>
+    <p>Réponse sous 7 jours.</p>
+
+    <p style="margin-top: 30px; font-size: 13px; color: #888;">
+      © 2025 FouMalade | <a href="https://www.cnil.fr">CNIL (France)</a> - <a href="https://www.autoriteprotectiondonnees.be">APD (Belgique)</a> - <a href="https://www.edoeb.admin.ch">PFPDT (Suisse)</a>
+    </p>
+  </div>
 </body>
 </html>
-
