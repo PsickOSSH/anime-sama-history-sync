@@ -85,13 +85,14 @@
 <body>
   <div class="container">
     <h1>Politique de confidentialité</h1>
-    <p><strong>Anime Sama - History Sync</strong> | Mise à jour : 05 novembre 2025</p>
+    <p><strong>Anime Sama - History Sync</strong> | Mise à jour : 07 novembre 2025</p>
 
     <h2>1. Données collectées</h2>
     <ul>
-      <li><strong>Identité Google :</strong> Nom, email, photo de profil (via OAuth)</li>
-      <li><strong>Historique anime :</strong> Données depuis localStorage anime-sama.org (visionnage, favoris, watchlist)</li>
-      <li><strong>Tokens :</strong> Refresh token et access token pour accéder à Google Drive</li>
+      <li><strong>Identité Google :</strong> Nom, email, photo de profil (via OAuth 2.0)</li>
+      <li><strong>Historique anime-sama :</strong> Données depuis localStorage anime-sama.org (visionnage, favoris, watchlist)</li>
+      <li><strong>Tokens d'authentification :</strong> Refresh token et access token pour accéder à Google Drive</li>
+      <li><strong>Onglets du navigateur :</strong> L'extension utilise la permission <code>tabs</code> uniquement pour détecter si un onglet anime-sama.org est ouvert lorsque vous cliquez sur l'icône de l'extension. Si aucun onglet n'est ouvert, l'extension ouvre automatiquement la page anime-sama.org/profil/. L'extension n'accède jamais aux URL, titres ou contenus d'autres sites web.</li>
     </ul>
     <p>
       <strong>Important :</strong> L'extension n'accède <strong>jamais</strong> aux données du serveur anime-sama.org. 
@@ -107,17 +108,17 @@
       </tr>
       <tr>
         <td><strong>Google Drive (appDataFolder)</strong></td>
-        <td>Historique anime (fichier <code>anime-sama-history.json</code>)</td>
+        <td>Historique anime-sama (fichier <code>anime-sama-history.json</code>)</td>
         <td>AES-256 (chiffrement Google)</td>
       </tr>
       <tr>
         <td><strong>Navigateur local</strong></td>
-        <td>Refresh token, access token, métadonnées</td>
+        <td>Refresh token, access token, métadonnées utilisateur</td>
         <td>Stockage local non chiffré</td>
       </tr>
       <tr>
-        <td><strong>Cloudflare</strong></td>
-        <td>Logs techniques (IP, métadonnées renouvellement)</td>
+        <td><strong>Backend OAuth (Cloudflare Workers)</strong></td>
+        <td>Logs techniques : IP, horodatage, code d'autorisation, refresh token (transit uniquement)</td>
         <td>Conservés 7-30 jours</td>
       </tr>
     </table>
@@ -128,29 +129,46 @@
       <strong>Ne partagez pas votre ordinateur avec d'autres utilisateurs.</strong>
     </div>
 
-    <h2>3. Synchronisation multi-appareils</h2>
+    <h2>3. Backend OAuth (Cloudflare Workers)</h2>
     <p>
-      Votre historique est accessible sur tous les appareils où vous connectez le même compte Google. 
-      Tout nouvel appareil utilisant votre compte Google peut charger votre historique anime complet. 
-      Ne partagez pas votre compte Google si vous souhaitez garder vos données privées.
+      L'extension communique avec un backend sécurisé hébergé sur Cloudflare (<code>oauth-backend.foumalade.workers.dev</code>) pour :
+    </p>
+    <ul>
+      <li>Échanger le code d'autorisation OAuth contre des tokens (évite d'exposer le <code>client_secret</code> dans l'extension)</li>
+      <li>Renouveler automatiquement l'<code>access_token</code> toutes les ~55 minutes (5 minutes avant expiration)</li>
+    </ul>
+    <p>
+      Le backend traite uniquement : code d'autorisation, refresh token (en transit), et métadonnées techniques (IP, horodatage). 
+      Aucune donnée d'historique anime-sama ne transite par ce backend.
     </p>
 
-    <h2>4. Qui accède à vos données</h2>
+    <h2>4. Synchronisation multi-appareils</h2>
+    <p>
+      Votre historique est accessible sur tous les appareils où vous connectez le même compte Google. 
+      Tout nouvel appareil utilisant votre compte Google peut charger votre historique anime-sama complet. 
+      Ne partagez pas votre compte Google si vous souhaitez garder vos données privées.
+    </p>
+    <p>
+      <strong>Détection automatique des changements :</strong> L'extension surveille en temps réel les modifications dans votre historique anime-sama 
+      (vérification toutes les 200 ms). La sauvegarde vers Google Drive se déclenche automatiquement après 1 seconde d'inactivité.
+    </p>
+
+    <h2>5. Qui accède à vos données</h2>
     <ul>
       <li><strong>Vous seul :</strong> Via votre compte Google ou directement sur Google Drive</li>
-      <li><strong>Cloudflare :</strong> Voit les métadonnées de renouvellement de tokens (USA, encadré par clauses contractuelles types RGPD)</li>
-      <li><strong>Google :</strong> Stocke vos données, chiffrées</li>
+      <li><strong>Cloudflare (backend OAuth) :</strong> Voit les métadonnées de renouvellement de tokens et IP (USA, encadré par clauses contractuelles types RGPD)</li>
+      <li><strong>Google :</strong> Stocke vos données dans Google Drive, chiffrées avec AES-256</li>
     </ul>
 
-    <h2>5. Vos droits (RGPD)</h2>
+    <h2>6. Vos droits (RGPD)</h2>
     <ul>
-      <li><strong>Accès :</strong> L’accès au fichier <code>anime-sama-history.json</code> nécessite l’extension ou un outil compatible avec l’API Google Drive (l’interface Drive Web classique ne l’affiche pas).</li>
-      <li><strong>Suppression :</strong> La suppression du fichier n’est pas possible via l’extension. Vous pouvez supprimer le fichier manuellement depuis Google Drive en allant dans Paramètres → Gérer les applications → Anime Sama - History Sync → Supprimer les données associées.</li> 
-      <li><strong>Portabilité :</strong> Vous pouvez récupérer vos données uniquement via l’extension ou un outil utilisant l’API Google Drive pour accéder au fichier.</li>
-      <li><strong>Retrait du consentement :</strong> La déconnexion de l’extension empêche toute nouvelle collecte de données, mais ne supprime pas les données déjà stockées dans Drive. Pour les effacer, utilisez la procédure de suppression via Google Drive décrite ci-dessus.</li>
+      <li><strong>Accès :</strong> L'accès au fichier <code>anime-sama-history.json</code> nécessite un outil compatible avec l'API Google Drive (l'interface Drive Web classique ne l'affiche pas car il est dans le dossier caché <code>appDataFolder</code>).</li>
+      <li><strong>Suppression :</strong> La suppression du fichier n'est pas possible via l'extension. Vous pouvez supprimer le fichier manuellement depuis Google Drive en allant dans Paramètres → Gérer les applications → Anime Sama - History Sync → Supprimer les données associées.</li> 
+      <li><strong>Portabilité :</strong> Vous pouvez récupérer vos données uniquement via l'extension ou un outil utilisant l'API Google Drive pour accéder au fichier JSON.</li>
+      <li><strong>Retrait du consentement :</strong> La déconnexion de l'extension empêche toute nouvelle collecte de données, mais ne supprime pas les données déjà stockées dans Drive. Pour les effacer, utilisez la procédure de suppression via Google Drive décrite ci-dessus.</li>
     </ul>
 
-    <h2>6. Pas de tracking, pas de pub</h2>
+    <h2>7. Pas de tracking, pas de pub</h2>
     <ul>
       <li>Aucun cookie</li>
       <li>Aucun pixel de suivi</li>
@@ -158,28 +176,52 @@
       <li>Vos données ne sont jamais vendues</li>
     </ul>
 
-    <h2>7. Sécurité</h2>
+    <h2>8. Sécurité</h2>
     <ul>
-      <li>OAuth 2.0 (secrets gérés par Cloudflare, jamais exposés)</li>
+      <li>OAuth 2.0 (secrets gérés par Cloudflare Workers, jamais exposés dans l'extension)</li>
       <li>HTTPS/TLS 1.2+ pour toutes les communications</li>
       <li>Refresh token valide indéfiniment jusqu'à votre déconnexion ou révocation via votre compte Google</li>
-      <li>Access token renouvelé automatiquement chaque heure</li>
+      <li>Access token renouvelé automatiquement toutes les ~55 minutes (5 minutes avant expiration)</li>
       <li><strong>Révocation :</strong> Si compromis, révoquez manuellement l'accès via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Account</a></li>
     </ul>
 
-    <h2>8. Questions</h2>
+    <h2>9. Permissions de l'extension</h2>
+    <p>L'extension déclare les permissions suivantes dans son manifest :</p>
+    <ul>
+      <li><code>identity</code> : Authentification Google OAuth 2.0</li>
+      <li><code>storage</code> : Stockage local des tokens et métadonnées utilisateur</li>
+      <li><code>tabs</code> : Détection et ouverture automatique de l'onglet anime-sama.org/profil/</li>
+    </ul>
+    <p><strong>Permissions d'accès réseau :</strong></p>
+    <ul>
+      <li><code>https://anime-sama.org/*</code> : Accès au localStorage du site pour récupérer l'historique</li>
+      <li><code>https://www.googleapis.com/*</code> : Communication avec l'API Google Drive</li>
+      <li><code>https://oauth-backend.foumalade.workers.dev/*</code> : Backend OAuth sécurisé</li>
+    </ul>
+
+    <h2>10. Scopes Google Drive</h2>
+    <p>L'extension demande uniquement les accès suivants à votre compte Google :</p>
+    <ul>
+      <li><code>https://www.googleapis.com/auth/drive.appdata</code> : Accès au dossier caché appDataFolder (invisible sur l'interface web Drive)</li>
+      <li><code>https://www.googleapis.com/auth/drive.file</code> : Accès uniquement aux fichiers créés par l'extension</li>
+      <li><code>https://www.googleapis.com/auth/userinfo.profile</code> : Nom et photo de profil</li>
+      <li><code>https://www.googleapis.com/auth/userinfo.email</code> : Adresse email</li>
+    </ul>
+    <p>L'extension ne peut <strong>jamais</strong> accéder à vos autres fichiers Google Drive personnels.</p>
+
+    <h2>11. Compatibilité mobile</h2>
+    <p>
+      L'extension détecte automatiquement les appareils mobiles (Android via Chrome/Yandex Browser, iOS via Orion Browser) 
+      et adapte le flux d'authentification OAuth en conséquence pour améliorer l'expérience utilisateur.
+    </p>
+
+    <h2>12. Questions</h2>
     <p>Contactez : <a href="mailto:foumalade.extension@protonmail.com">foumalade.extension@protonmail.com</a></p>
-    <p>Réponse sous 7 jours.</p>
+    <p>Réponse sous 30 jours.</p>
 
     <p style="margin-top: 30px; font-size: 13px; color: #888;">
-      © 2025 FouMalade | <a href="https://www.cnil.fr">CNIL (France)</a> - <a href="https://www.autoriteprotectiondonnees.be">APD (Belgique)</a> - <a href="https://www.edoeb.admin.ch">PFPDT (Suisse)</a>
+      © 2025 FouMalade | <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">CNIL (France)</a> - <a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener noreferrer">APD (Belgique)</a> - <a href="https://www.edoeb.admin.ch" target="_blank" rel="noopener noreferrer">PFPDT (Suisse)</a>
     </p>
   </div>
 </body>
 </html>
-
-
-
-
-
-
