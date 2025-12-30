@@ -85,17 +85,17 @@
 <body>
   <div class="container">
     <h1>Politique de confidentialité</h1>
-    <p><strong>Anime Sama - History Sync</strong> | Mise à jour : 23 décembre 2025</p>
+    <p><strong>Anime Sama - History Sync</strong> | Mise à jour : 30 décembre 2025</p>
 
     <h2>1. Données collectées</h2>
     <ul>
       <li><strong>Identité Google :</strong> Nom, email, photo de profil (via OAuth 2.0)</li>
-      <li><strong>Historique anime-sama :</strong> Données depuis localStorage anime-sama.si (visionnage, favoris, watchlist)</li>
+      <li><strong>Historique anime-sama :</strong> Données depuis localStorage anime-sama.tv (visionnage, favoris, watchlist)</li>
       <li><strong>Tokens d'authentification :</strong> Refresh token et access token pour accéder à Google Drive</li>
-      <li><strong>Onglets du navigateur :</strong> L'extension utilise la permission <code>tabs</code> uniquement pour détecter si un onglet anime-sama.si est ouvert lorsque vous cliquez sur l'icône de l'extension. Si aucun onglet n'est ouvert, l'extension ouvre automatiquement la page anime-sama.si/profil/. L'extension n'accède jamais aux URL, titres ou contenus d'autres sites web.</li>
+      <li><strong>Onglets du navigateur :</strong> L'extension utilise la permission <code>tabs</code> uniquement pour détecter si un onglet anime-sama.tv est ouvert lorsque vous cliquez sur l'icône de l'extension. Si aucun onglet n'est ouvert, l'extension ouvre automatiquement la page anime-sama.tv/profil/. L'extension n'accède jamais aux URL, titres ou contenus d'autres sites web.</li>
     </ul>
     <p>
-      <strong>Important :</strong> L'extension n'accède <strong>jamais</strong> aux données du serveur anime-sama.si. 
+      <strong>Important :</strong> L'extension n'accède <strong>jamais</strong> aux données du serveur anime-sama.tv. 
       Elle synchronise seulement les données stockées localement dans votre navigateur.
     </p>
 
@@ -190,11 +190,11 @@
     <ul>
       <li><code>identity</code> : Authentification Google OAuth 2.0</li>
       <li><code>storage</code> : Stockage local des tokens et métadonnées utilisateur</li>
-      <li><code>tabs</code> : Détection et ouverture automatique de l'onglet anime-sama.si/profil/</li>
+      <li><code>tabs</code> : Détection et ouverture automatique de l'onglet anime-sama.tv/profil/</li>
     </ul>
     <p><strong>Permissions d'accès réseau :</strong></p>
     <ul>
-      <li><code>https://anime-sama.si/*</code> : Accès au localStorage du site pour récupérer l'historique</li>
+      <li><code>https://anime-sama.tv/*</code> : Accès au localStorage du site pour récupérer l'historique</li>
       <li><code>https://www.googleapis.com/*</code> : Communication avec l'API Google Drive</li>
       <li><code>https://oauth-backend.foumalade.workers.dev/*</code> : Backend OAuth sécurisé</li>
     </ul>
@@ -225,5 +225,6 @@
   </div>
 </body>
 </html>
+
 
 
