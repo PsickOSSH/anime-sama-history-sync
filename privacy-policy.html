@@ -85,17 +85,17 @@
 <body>
   <div class="container">
     <h1>Politique de confidentialité</h1>
-    <p><strong>Anime Sama - History Sync</strong> | Mise à jour : 30 décembre 2025</p>
+    <p><strong>Anime Sama - History Sync</strong> | Version 1.1.1 | Mise à jour : 11 janvier 2026</p>
 
     <h2>1. Données collectées</h2>
     <ul>
       <li><strong>Identité Google :</strong> Nom, email, photo de profil (via OAuth 2.0)</li>
-      <li><strong>Historique anime-sama :</strong> Données depuis localStorage anime-sama.tv (visionnage, favoris, watchlist)</li>
+      <li><strong>Historique anime-sama :</strong> Données depuis localStorage anime-sama (visionnage, favoris, watchlist)</li>
       <li><strong>Tokens d'authentification :</strong> Refresh token et access token pour accéder à Google Drive</li>
-      <li><strong>Onglets du navigateur :</strong> L'extension utilise la permission <code>tabs</code> uniquement pour détecter si un onglet anime-sama.tv est ouvert lorsque vous cliquez sur l'icône de l'extension. Si aucun onglet n'est ouvert, l'extension ouvre automatiquement la page anime-sama.tv/profil/. L'extension n'accède jamais aux URL, titres ou contenus d'autres sites web.</li>
+      <li><strong>Onglets du navigateur :</strong> L'extension utilise la permission <code>tabs</code> pour communiquer avec les onglets Anime-Sama ouverts (afin de mettre à jour l'état de connexion en temps réel sur toutes vos pages) et pour ouvrir le site via l'icône. L'extension n'accède jamais aux URL, titres ou contenus des autres sites web.</li>
     </ul>
     <p>
-      <strong>Important :</strong> L'extension n'accède <strong>jamais</strong> aux données du serveur anime-sama.tv. 
+      <strong>Important :</strong> L'extension n'accède <strong>jamais</strong> aux données du serveur anime-sama. 
       Elle synchronise seulement les données stockées localement dans votre navigateur.
     </p>
 
@@ -160,11 +160,11 @@
       <li><strong>Google :</strong> Stocke vos données dans Google Drive, chiffrées avec AES-256</li>
     </ul>
 
-    <h2>6. Vos droits (RGPD)</h2>
+    <h2>6. Vos droits (RGPD) & Portabilité</h2>
     <ul>
       <li><strong>Accès :</strong> L'accès au fichier <code>anime-sama-history.json</code> nécessite un outil compatible avec l'API Google Drive (l'interface Drive Web classique ne l'affiche pas car il est dans le dossier caché <code>appDataFolder</code>).</li>
+      <li><strong>Exportation / Importation :</strong> Vous pouvez désormais <strong>télécharger</strong> une copie locale de votre historique (format <code>.json</code>) ou <strong>importer</strong> un fichier de sauvegarde directement depuis l'interface ajoutée au site Anime-Sama, garantissant la portabilité de vos données.</li>
       <li><strong>Suppression :</strong> La suppression du fichier n'est pas possible via l'extension. Vous pouvez supprimer le fichier manuellement depuis Google Drive en allant dans Paramètres → Gérer les applications → Anime Sama - History Sync → Supprimer les données associées.</li> 
-      <li><strong>Portabilité :</strong> Vous pouvez récupérer vos données uniquement via l'extension ou un outil utilisant l'API Google Drive pour accéder au fichier JSON.</li>
       <li><strong>Retrait du consentement :</strong> La déconnexion de l'extension empêche toute nouvelle collecte de données, mais ne supprime pas les données déjà stockées dans Drive. Pour les effacer, utilisez la procédure de suppression via Google Drive décrite ci-dessus.</li>
     </ul>
 
@@ -190,11 +190,11 @@
     <ul>
       <li><code>identity</code> : Authentification Google OAuth 2.0</li>
       <li><code>storage</code> : Stockage local des tokens et métadonnées utilisateur</li>
-      <li><code>tabs</code> : Détection et ouverture automatique de l'onglet anime-sama.tv/profil/</li>
+      <li><code>tabs</code> : Détection et communication avec les onglets Anime-Sama</li>
     </ul>
     <p><strong>Permissions d'accès réseau :</strong></p>
     <ul>
-      <li><code>https://anime-sama.tv/*</code> : Accès au localStorage du site pour récupérer l'historique</li>
+      <li><code>https://anime-sama.*</code> (<code>.tv</code>, <code>.si</code>, <code>.to</code>, <code>.org</code>, <code>.fr</code>, <code>.eu</code>) : Accès au localStorage du site pour récupérer l'historique</li>
       <li><code>https://www.googleapis.com/*</code> : Communication avec l'API Google Drive</li>
       <li><code>https://oauth-backend.foumalade.workers.dev/*</code> : Backend OAuth sécurisé</li>
     </ul>
@@ -217,14 +217,10 @@
 
     <h2>12. Questions</h2>
     <p>Contactez : <a href="mailto:foumalade.extension@protonmail.com">foumalade.extension@protonmail.com</a></p>
-    <p>Réponse sous 30 jours.</p>
 
     <p style="margin-top: 30px; font-size: 13px; color: #888;">
-      © 2025 FouMalade | <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">CNIL (France)</a> - <a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener noreferrer">APD (Belgique)</a> - <a href="https://www.edoeb.admin.ch" target="_blank" rel="noopener noreferrer">PFPDT (Suisse)</a>
+      © 2026 FouMalade | <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">CNIL (France)</a> - <a href="https://www.autoriteprotectiondonnees.be" target="_blank" rel="noopener noreferrer">APD (Belgique)</a> - <a href="https://www.edoeb.admin.ch" target="_blank" rel="noopener noreferrer">PFPDT (Suisse)</a>
     </p>
   </div>
 </body>
 </html>
-
-
-
