@@ -85,14 +85,15 @@
 <body>
   <div class="container">
     <h1>Politique de confidentialité</h1>
-    <p><strong>Anime Sama - History Sync</strong> | Version 1.1.4 | Mise à jour : 13 octobre 2026</p>
+    <p><strong>Anime Sama - History Sync</strong> | Version 1.1.5 | Mise à jour : 1er novembre 2026</p>
 
     <h2>1. Données collectées</h2>
     <ul>
       <li><strong>Identité Google :</strong> Nom, email, photo de profil (via OAuth 2.0)</li>
       <li><strong>Historique anime-sama :</strong> Données depuis localStorage anime-sama (visionnage, favoris, watchlist)</li>
       <li><strong>Tokens d'authentification :</strong> Refresh token et access token pour accéder à Google Drive</li>
-      <li><strong>Onglets du navigateur :</strong> L'extension utilise la permission <code>tabs</code> pour communiquer avec les onglets Anime-Sama ouverts (afin de mettre à jour l'état de connexion en temps réel sur toutes vos pages) et pour ouvrir le site via l'icône. L'extension n'accède jamais aux URL, titres ou contenus des autres sites web.</li>
+      <li><strong>Onglets du navigateur :</strong> L'extension liste uniquement les onglets Anime-Sama ouverts (autorisation limitée aux domaines Anime-Sama) pour mettre à jour l'état de connexion en temps réel sur vos pages, et ouvre le site via l'icône. Elle n'accède jamais aux URL, titres ou contenus des autres sites web.</li>
+      <li><strong>Affichage :</strong> Le panneau de synchronisation charge le logo d'Anime-Sama depuis <code>cdn.statically.io</code> (service tiers). Votre adresse IP est donc visible de ce service lorsque vous ouvrez la page profil.</li>
     </ul>
     <p>
       <strong>Important :</strong> L'extension n'accède <strong>jamais</strong> aux données du serveur anime-sama. 
@@ -113,7 +114,7 @@
       </tr>
       <tr>
         <td><strong>Navigateur local</strong></td>
-        <td>Refresh token, access token, métadonnées utilisateur</td>
+        <td>Refresh token, access token, métadonnées utilisateur, dernier état synchronisé de l'historique (pour fusionner les modifications entre appareils)</td>
         <td>Stockage local non chiffré</td>
       </tr>
       <tr>
@@ -125,7 +126,7 @@
 
     <div class="warning">
       <strong>Risque de sécurité critique :</strong> Le refresh token est stocké en plaintext dans <code>chrome.storage.local</code> ou <code>browser.storage.local</code>. 
-      Un attaquant avec accès local (malware, utilisateur partagé avec permissions admin) peut le voler et accéder indéfiniment à votre Google Drive. 
+      Un attaquant avec accès local (malware, utilisateur partagé avec permissions admin) peut le voler et accéder, tant que vous ne vous êtes pas déconnecté ou que vous n'avez pas révoqué l'accès, au fichier de sauvegarde de l'extension (<code>appDataFolder</code>) ainsi qu'à votre nom, photo et adresse email. Il n'a <strong>pas</strong> accès à vos autres fichiers Google Drive. 
       <strong>Ne partagez pas votre ordinateur avec d'autres utilisateurs.</strong>
     </div>
 
@@ -135,7 +136,7 @@
     </p>
     <ul>
       <li>Échanger le code d'autorisation OAuth contre des tokens (évite d'exposer le <code>client_secret</code> dans l'extension)</li>
-      <li>Renouveler automatiquement l'<code>access_token</code> toutes les ~55 minutes (5 minutes avant expiration)</li>
+      <li>Renouveler l'<code>access_token</code> lorsqu'il approche de son expiration (vérification toutes les 15 minutes environ, et au premier refus de Google Drive)</li>
     </ul>
     <p>
       Le backend traite uniquement : code d'autorisation, refresh token (en transit), et métadonnées techniques (IP, horodatage). 
@@ -150,13 +151,15 @@
     </p>
     <p>
       <strong>Détection automatique des changements :</strong> L'extension surveille en temps réel les modifications dans votre historique anime-sama 
-      (vérification toutes les 200 ms). La sauvegarde vers Google Drive se déclenche automatiquement après 1 seconde d'inactivité.
+      (vérification toutes les 2 secondes). La sauvegarde vers Google Drive se déclenche automatiquement environ 1 seconde après un changement.
+      Si votre historique a été modifié à la fois sur cet appareil et ailleurs, les deux versions sont fusionnées (en cas de conflit sur une même entrée, la version de l'appareil en cours d'utilisation est conservée). Une copie de l'historique local est conservée dans le navigateur avant toute mise à jour (<code>anime-sama-pre-sync-backup</code>).
     </p>
 
     <h2>5. Qui accède à vos données</h2>
     <ul>
-      <li><strong>Vous seul :</strong> Via votre compte Google ou directement sur Google Drive</li>
-      <li><strong>Cloudflare (backend OAuth) :</strong> Voit les métadonnées de renouvellement de tokens et IP (USA, encadré par clauses contractuelles types RGPD)</li>
+      <li><strong>Vous :</strong> Via votre compte Google ou directement sur Google Drive</li>
+      <li><strong>Éditeur de l'extension (PsickOSSH) :</strong> L'historique n'est jamais envoyé au backend. En revanche, le code d'autorisation et le refresh token transitent par le backend OAuth que j'héberge, et les journaux techniques de celui-ci (IP, horodatage) sont accessibles par moi. Ils ne servent qu'au fonctionnement et au dépannage.</li>
+      <li><strong>Cloudflare (hébergeur du backend OAuth) :</strong> Voit les métadonnées de renouvellement de tokens et IP (USA, encadré par clauses contractuelles types RGPD)</li>
       <li><strong>Google :</strong> Stocke vos données dans Google Drive, chiffrées avec AES-256</li>
     </ul>
 
@@ -165,12 +168,12 @@
       <li><strong>Accès :</strong> L'accès au fichier <code>anime-sama-history.json</code> nécessite un outil compatible avec l'API Google Drive (l'interface Drive Web classique ne l'affiche pas car il est dans le dossier caché <code>appDataFolder</code>).</li>
       <li><strong>Exportation / Importation :</strong> Vous pouvez désormais <strong>télécharger</strong> une copie locale de votre historique (format <code>.json</code>) ou <strong>importer</strong> un fichier de sauvegarde directement depuis l'interface ajoutée au site Anime-Sama, garantissant la portabilité de vos données.</li>
       <li><strong>Suppression :</strong> La suppression du fichier n'est pas possible via l'extension. Vous pouvez supprimer le fichier manuellement depuis Google Drive en allant dans Paramètres → Gérer les applications → Anime Sama - History Sync → Supprimer les données associées.</li> 
-      <li><strong>Retrait du consentement :</strong> La déconnexion de l'extension empêche toute nouvelle collecte de données, mais ne supprime pas les données déjà stockées dans Drive. Pour les effacer, utilisez la procédure de suppression via Google Drive décrite ci-dessus.</li>
+      <li><strong>Retrait du consentement :</strong> La déconnexion de l'extension révoque les tokens auprès de Google, supprime les tokens et les données de session du navigateur et empêche toute nouvelle collecte de données, mais ne supprime pas les données déjà stockées dans Drive. Pour les effacer, utilisez la procédure de suppression via Google Drive décrite ci-dessus.</li>
     </ul>
 
     <h2>7. Pas de tracking, pas de pub</h2>
     <ul>
-      <li>Aucun cookie</li>
+      <li>Aucun cookie posé par l'extension (la fenêtre de connexion Google peut en utiliser, selon les règles de Google)</li>
       <li>Aucun pixel de suivi</li>
       <li>Aucun analytics</li>
       <li>Vos données ne sont jamais vendues</li>
@@ -181,7 +184,8 @@
       <li>OAuth 2.0 (secrets gérés par Cloudflare Workers, jamais exposés dans l'extension)</li>
       <li>HTTPS/TLS 1.2+ pour toutes les communications</li>
       <li>Refresh token valide indéfiniment jusqu'à votre déconnexion ou révocation via votre compte Google</li>
-      <li>Access token renouvelé automatiquement toutes les ~55 minutes (5 minutes avant expiration)</li>
+      <li>Access token renouvelé automatiquement avant expiration</li>
+      <li>Les tokens de connexion mobile ne sont enregistrés qu'après confirmation du compte par l'utilisateur, et sont retirés de l'URL immédiatement</li>
       <li><strong>Révocation :</strong> Si compromis, révoquez manuellement l'accès via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">Google Account</a></li>
     </ul>
 
@@ -190,11 +194,13 @@
     <ul>
       <li><code>identity</code> : Authentification Google OAuth 2.0</li>
       <li><code>storage</code> : Stockage local des tokens et métadonnées utilisateur</li>
-      <li><code>tabs</code> : Détection et communication avec les onglets Anime-Sama</li>
+      <li><code>alarms</code> : Planification du renouvellement du token d'accès</li>
     </ul>
+    <p>La permission <code>tabs</code> n'est pas utilisée : l'extension ne peut pas lire les URL ni les titres de vos onglets.</p>
     <p><strong>Permissions d'accès réseau :</strong></p>
     <ul>
-      <li><code>https://anime-sama.*</code> (<code>.tv</code>, <code>.si</code>, <code>.to</code>, <code>.org</code>, <code>.fr</code>, <code>.eu</code>) : Accès au localStorage du site pour récupérer l'historique</li>
+      <li><code>https://anime-sama.tv</code>, <code>.si</code>, <code>.to</code>, <code>.org</code>, <code>.fr</code>, <code>.eu</code>, <code>.pw</code> : Accès au localStorage du site pour récupérer l'historique</li>
+      <li><code>https://psickossh.github.io/anime-sama-history-sync/Anime-Sama-History-Sync-Profil.html</code> : Page de profil de l'extension (connexion mobile)</li>
       <li><code>https://www.googleapis.com/*</code> : Communication avec l'API Google Drive</li>
       <li><code>https://oauth-backend.psickossh.workers.dev/*</code> : Backend OAuth sécurisé</li>
     </ul>
@@ -203,16 +209,15 @@
     <p>L'extension demande uniquement les accès suivants à votre compte Google :</p>
     <ul>
       <li><code>https://www.googleapis.com/auth/drive.appdata</code> : Accès au dossier caché appDataFolder (invisible sur l'interface web Drive)</li>
-      <li><code>https://www.googleapis.com/auth/drive.file</code> : Accès uniquement aux fichiers créés par l'extension</li>
       <li><code>https://www.googleapis.com/auth/userinfo.profile</code> : Nom et photo de profil</li>
       <li><code>https://www.googleapis.com/auth/userinfo.email</code> : Adresse email</li>
     </ul>
-    <p>L'extension ne peut <strong>jamais</strong> accéder à vos autres fichiers Google Drive personnels.</p>
+    <p>L'extension ne demande aucun accès à l'ensemble de votre Drive et ne peut <strong>jamais</strong> accéder à vos autres fichiers Google Drive personnels.</p>
 
     <h2>11. Compatibilité mobile</h2>
     <p>
-      L'extension détecte automatiquement les appareils mobiles (Android via Kiwi Browser/Yandex Browser, iOS via Orion Browser) 
-      et adapte le flux d'authentification OAuth en conséquence pour améliorer l'expérience utilisateur.
+      Sur les appareils mobiles (Android, iOS), la connexion Google s'effectue via la page <code>psickossh.github.io/anime-sama-history-sync</code>.
+      Après authentification, cette page renvoie les tokens à l'extension via l'adresse de la page (fragment <code>#</code> de l'URL). L'extension demande confirmation du compte avant de les enregistrer, puis les efface de l'URL.
     </p>
 
     <h2>12. Questions</h2>
